@@ -1,8 +1,8 @@
 import net.nosegrind.apiframework.ApiCacheService;
 import net.nosegrind.apiframework.ApiObjectService;
 
-import grails.plugins.GrailsPluginManager
-import grails.plugins.GrailsPlugin
+//import grails.plugins.GrailsPluginManager
+//import grails.plugins.GrailsPlugin
 
 class BootStrap {
 
