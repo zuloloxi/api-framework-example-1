@@ -6,7 +6,7 @@ import net.nosegrind.apiframework.ApiObjectService;
 
 class BootStrap {
 
-	def grailsApplication
+	//def grailsApplication
 	ApiObjectService apiObjectService
 	ApiCacheService apiCacheService
 	
