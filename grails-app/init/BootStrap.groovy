@@ -7,8 +7,8 @@ import net.nosegrind.apiframework.ApiObjectService;
 class BootStrap {
 
 	//def grailsApplication
-	ApiObjectService apiObjectService
-	ApiCacheService apiCacheService
+	//ApiObjectService apiObjectService
+	//ApiCacheService apiCacheService
 	
     def init = { servletContext ->
 		/*
@@ -17,8 +17,8 @@ class BootStrap {
 			println(it)
 		}
 		*/
-		apiObjectService.initialize()
-		def test = apiCacheService.getCacheNames()
+		//apiObjectService.initialize()
+		//def test = apiCacheService.getCacheNames()
     }
     def destroy = {
     }
