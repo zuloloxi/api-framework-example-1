@@ -7,7 +7,6 @@ import javax.servlet.http.HttpServletResponse
 
 class PostController {
 
-	def springSecurityService
 	def apiLayerService
                              
 	def defaultAction = 'list'
@@ -28,8 +27,7 @@ class PostController {
 				rowCount()
 			}
 		}
-		LinkedHashMap model = [:]
-		render (model: [posts:post, total:rowCount])
+		return ['posts':post, 'total':rowCount])
 	}
 	
 	def listByTopic(){
@@ -52,7 +50,7 @@ class PostController {
 			projections {rowCount()}
 		}
 
-		render (model:[topic:topic, posts:post, params:params, total:rowCount])
+		return ['topic':topic, 'posts':post, 'params':params, 'total':rowCount])
 	}
 
 	def listBySection(){
@@ -67,16 +65,13 @@ class PostController {
 			eq("section", section)
 			projections {rowCount()}
 		}
-		render (model:[section:section, posts:post, params:params, total:rowCount])
+		return ['section':section, 'posts':post, 'params':params, 'total'rowCount])
 	}
 	
 	def show(){
 		def post = Post.get(params.id.toLong())
 		if(post){
-            LinkedHashMap model = ['post':post]
-            return model
-            //respond post
-			//render(model:post)
+            return ['post':post]
 		}
 		return null
 	}
@@ -105,7 +100,8 @@ class PostController {
 		if (!post.save(flush:true)) {
 			render(status:HttpServletResponse.SC_NOT_FOUND, text: 'Could not save Post. Check your data and try again')
 		}else{
-			respond Post.get(post.id.toLong())
+            def newPost = Post.get(post.id.toLong())
+			return ['post':newPost]
 		}
 		return null
 	}
@@ -145,7 +141,8 @@ class PostController {
 				respond null
 			}else{
 				//apiToolkitService.callHook('test',testInstance,'update')
-				respond Post.get(postInstance.id.toLong())
+				def newPost = Post.get(postInstance.id.toLong())
+                return ['post':newPost]
 			}
 		}else{
 			render(status:HttpServletResponse.SC_NOT_FOUND)
@@ -160,8 +157,7 @@ class PostController {
 		}
 		
 		if(!postInstance.delete(flush:true)){
-			LinkedHashMap model = [id:params.id]
-			respond model as Object
+			return ['id':params.id]
 		}else{
 			return null
 		}
