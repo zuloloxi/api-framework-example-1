@@ -5,7 +5,7 @@ class PostTopicController {
 	def springSecurityService
 	def apiLayerService
                              
-	def defaultAction = 'show'
+	static defaultAction = 'show'
 
 	def show(){
 		List list = PostTopics.executeQuery( "select T.* from Topic T left join T.posts P where P.post.id=?",[params.id.toLong()]);

@@ -10,7 +10,7 @@ class TopicController {
 	def springSecurityService
 	def apiLayerService
                              
-	def defaultAction = 'list'
+	static defaultAction = 'list'
 
 	def list(){
 		respond Topic.list()

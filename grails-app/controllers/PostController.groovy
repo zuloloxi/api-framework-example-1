@@ -7,7 +7,7 @@ class PostController {
 
 	def apiLayerService
                              
-	def defaultAction = 'list'
+	static defaultAction = 'list'
 	
 	
 	def list(){
