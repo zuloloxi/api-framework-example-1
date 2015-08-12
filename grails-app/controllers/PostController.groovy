@@ -1,7 +1,5 @@
 
 
-import java.util.Date;
-import org.springframework.web.servlet.ModelAndView
 import javax.servlet.http.HttpServletResponse
 
 
@@ -27,7 +25,7 @@ class PostController {
 				rowCount()
 			}
 		}
-		return ['posts':post, 'total':rowCount])
+		return ['posts':post, 'total':rowCount]
 	}
 	
 	def listByTopic(){
@@ -50,7 +48,7 @@ class PostController {
 			projections {rowCount()}
 		}
 
-		return ['topic':topic, 'posts':post, 'params':params, 'total':rowCount])
+		return ['topic':topic, 'posts':post, 'params':params, 'total':rowCount]
 	}
 
 	def listBySection(){
@@ -65,7 +63,7 @@ class PostController {
 			eq("section", section)
 			projections {rowCount()}
 		}
-		return ['section':section, 'posts':post, 'params':params, 'total'rowCount])
+		return ['section':section, 'posts':post, 'params':params, 'total':rowCount]
 	}
 	
 	def show(){
