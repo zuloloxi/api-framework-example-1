@@ -1,7 +1,8 @@
 // stormpath tenant: lovely-weaver
 buildscript {
     ext {
-        grailsVersion = project.grailsVersion
+        grailsVersion = '3.0.5.BUILD-SNAPSHOT'
+        //grailsVersion = project.grailsVersion
     }
     repositories {
         mavenLocal()
@@ -30,7 +31,8 @@ apply plugin: "org.grails.grails-web"
 //apply plugin: "org.grails.grails-gsp"
 
 ext {
-    grailsVersion = project.grailsVersion
+    grailsVersion = '3.0.5.BUILD-SNAPSHOT'
+    //grailsVersion = project.grailsVersion
     gradleWrapperVersion = project.gradleWrapperVersion
 }
 

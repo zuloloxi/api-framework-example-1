@@ -1,7 +1,7 @@
 
 
 import javax.servlet.http.HttpServletResponse
-
+import org.springframework.web.servlet.ModelAndView
 
 class PostController {
 
@@ -69,7 +69,12 @@ class PostController {
 	def show(){
 		def post = Post.get(params.id.toLong())
 		if(post){
-            return ['post':post]
+            /*
+            ModelAndView mav=new ModelAndView()
+            mav.addObject("post", post)
+            return mav
+            */
+            // return ['post':post]
 		}
 		return null
 	}
