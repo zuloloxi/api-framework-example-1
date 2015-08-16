@@ -55,6 +55,13 @@ dependencyManagement {
     applyMavenExclusions false
 }
 
+run {
+    systemProperties = System.properties
+}
+
+test {
+    systemProperties = System.properties
+}
 
 dependencies {
     compile("org.grails.plugins:api-framework:0.1-SNAPSHOT")

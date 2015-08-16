@@ -67,16 +67,12 @@ class PostController {
 	}
 	
 	def show(){
+        println(request.getRequestURI())
+        println("show called")
 		def post = Post.get(params.id.toLong())
 		if(post){
-            /*
-            ModelAndView mav=new ModelAndView()
-            mav.addObject("post", post)
-            return mav
-            */
-            // return ['post':post]
+            return ['post':post]
 		}
-		return null
 	}
 	
 	def create(){
