@@ -1,11 +1,8 @@
 
 
-import javax.servlet.http.HttpServletResponse
-import org.springframework.web.servlet.ModelAndView
+//import javax.servlet.http.HttpServletResponse
 
 class PostController {
-
-	def apiLayerService
                              
 	static defaultAction = 'list'
 	
@@ -67,8 +64,6 @@ class PostController {
 	}
 	
 	def show(){
-        println(request.getRequestURI())
-        println("show called")
 		def post = Post.get(params.id.toLong())
 		if(post){
             return ['post':post]
@@ -93,16 +88,15 @@ class PostController {
 		post.author = person.id
 
 		if (post.hasErrors()) {
-			render(status:HttpServletResponse.SC_NOT_FOUND, text: 'Could not save Post. Check your data and try again')
+			//render(status:HttpServletResponse.SC_NOT_FOUND, text: 'Could not save Post. Check your data and try again')
 		}
 		
 		if (!post.save(flush:true)) {
-			render(status:HttpServletResponse.SC_NOT_FOUND, text: 'Could not save Post. Check your data and try again')
+			//render(status:HttpServletResponse.SC_NOT_FOUND, text: 'Could not save Post. Check your data and try again')
 		}else{
             def newPost = Post.get(post.id.toLong())
 			return ['post':newPost]
 		}
-		return null
 	}
 	
 	def update(){
@@ -122,17 +116,17 @@ class PostController {
 			postInstance.modifiedDate = now;
 			
 			if (postInstance == null){
-				render(status:HttpServletResponse.SC_BAD_REQUEST)
+				//render(status:HttpServletResponse.SC_BAD_REQUEST)
 			}
 	
 			if (postInstance.hasErrors()) {
 				postInstance.errors.allErrors.each { println it }
-				render(status:HttpServletResponse.SC_NOT_FOUND)
+				//render(status:HttpServletResponse.SC_NOT_FOUND)
 			}
 	
 			if(params?.version){
 				if (version!=params?.version?.toLong()) {
-					render(status:HttpServletResponse.SC_BAD_REQUEST, text: 'Another user has updated this Post while you were editing.')
+					//render(status:HttpServletResponse.SC_BAD_REQUEST, text: 'Another user has updated this Post while you were editing.')
 				}
 			}
 			
@@ -144,21 +138,18 @@ class PostController {
                 return ['post':newPost]
 			}
 		}else{
-			render(status:HttpServletResponse.SC_NOT_FOUND)
+			//return ['status':HttpServletResponse.SC_NOT_FOUND]
 		}
-		return null
 	}
 	
 	def delete(){
 		Post postInstance = Post.get(params.id.toLong())
 		if (postInstance == null) {
-			render(status:HttpServletResponse.SC_NOT_FOUND)
+			//render(status:HttpServletResponse.SC_NOT_FOUND)
 		}
 		
 		if(!postInstance.delete(flush:true)){
 			return ['id':params.id]
-		}else{
-			return null
 		}
 	}
 }

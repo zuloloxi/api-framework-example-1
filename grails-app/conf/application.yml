@@ -99,7 +99,7 @@ environments:
 hibernate:
     cache:
         use_second_level_cache: true
-        use_query_cache: true
+        use_query_cache: false
         provider_class: org.hibernate.cache.EhCacheProvider
         region:
             factory_class: org.hibernate.cache.ehcache.EhCacheRegionFactory
@@ -116,9 +116,45 @@ environments:
         dataSource:
             dbCreate: update
             url: jdbc:mysql://localhost:3306/testdb
+            properties:
+                jmxEnabled: true
+                initialSize: 5
+                maxActive: 50
+                minIdle: 5
+                maxIdle: 25
+                maxWait: 10000
+                maxAge: 600000
+                timeBetweenEvictionRunsMillis: 5000
+                minEvictableIdleTimeMillis: 60000
+                validationQuery: SELECT 1
+                validationQueryTimeout: 3
+                validationInterval: 15000
+                testOnBorrow: true
+                testWhileIdle: true
+                testOnReturn: false
+                jdbcInterceptors: ConnectionState
+                defaultTransactionIsolation: 2 # TRANSACTION_READ_COMMITTED
         dataSource_user:
             dbCreate: create-drop
             url: jdbc:mysql://localhost:3306/testuser
+            properties:
+                jmxEnabled: true
+                initialSize: 5
+                maxActive: 50
+                minIdle: 5
+                maxIdle: 25
+                maxWait: 10000
+                maxAge: 600000
+                timeBetweenEvictionRunsMillis: 5000
+                minEvictableIdleTimeMillis: 60000
+                validationQuery: SELECT 1
+                validationQueryTimeout: 3
+                validationInterval: 15000
+                testOnBorrow: true
+                testWhileIdle: true
+                testOnReturn: false
+                jdbcInterceptors: ConnectionState
+                defaultTransactionIsolation: 2 # TRANSACTION_READ_COMMITTED
     test:
         dataSource:
             dbCreate: update
@@ -190,4 +226,13 @@ apitoolkit:
     serverType: master
     iostate:
         preloadDir: /home/owenrubel/.iostate
+
+---
+server:
+    tomcat:
+        backgroundProcessorDelay: 30
+        maxThreads: 250
+        uriEncoding: UTF-8
+        compression: off
+        compressableMimeTypes: application/json,text/json,application/xml,text/xml,text/plain
 

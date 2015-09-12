@@ -36,6 +36,7 @@ ext {
     gradleWrapperVersion = project.gradleWrapperVersion
 }
 
+
 /*
 assets {
     minifyJs = true
@@ -66,9 +67,9 @@ test {
 dependencies {
     compile("org.grails.plugins:api-framework:0.1-SNAPSHOT")
     compile "org.springframework.boot:spring-boot-starter-logging"
-    provided "org.springframework.boot:spring-boot-starter-actuator"
+    //compile "org.springframework.boot:spring-boot-starter-actuator"
     compile "org.springframework.boot:spring-boot-autoconfigure"
-    provided "org.springframework.boot:spring-boot-starter-tomcat"
+    compile "org.springframework.boot:spring-boot-starter-tomcat"
     compile "org.grails:grails-dependencies"
     compile "org.grails:grails-web-boot"
 
