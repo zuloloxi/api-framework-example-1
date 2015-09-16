@@ -17,10 +17,16 @@ class TopicController {
 	}
 	
 	def show(){
-		respond Topic.get(params.id)
+println("topic/show")
+		def topic = Topic.get(params.id.toLong())
+println(params.id)
+		if(topic){
+println(topic)
+	    		return ['topic':topic]
+		}
 	}
 	
-	def save(Topic topicInstance){
+	def save(){
 		topicInstance.topicName = params.topicName
 		
 		if (!topicInstance.save(flush:true)) {
@@ -34,7 +40,7 @@ class TopicController {
 		return null
 	}
 
-	def update(Topic topicInstance){
+	def update(){
 		long version = topicInstance.version
 		
 		if (version!=params.version.toLong()) {

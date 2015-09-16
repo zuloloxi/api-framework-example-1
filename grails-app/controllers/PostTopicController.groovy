@@ -7,12 +7,18 @@ class PostTopicController {
                              
 	static defaultAction = 'show'
 
-	def show(){
-		List list = PostTopics.executeQuery( "select T.* from Topic T left join T.posts P where P.post.id=?",[params.id.toLong()]);
+	def showByPost(){
+		List list = PostTopics.executeQuery( "select * from PostTopic PT where PT.post.id=?",[params.id.toLong()]);
 		LinkedHashMap model = [:]
 		render model as Object, [model:[list:list]]
 	}
 	
+	def showByTopic(){
+		List list = PostTopics.executeQuery( "select * from PostTopic PT where PT.topic.id=?",[params.id.toLong()]);
+		LinkedHashMap model = [:]
+		render model as Object, [model:[list:list]]
+	}
+
 	def addPostTopics(){
 		Post post = Post.get(params.id)
 		for (String key in params.keySet()) {

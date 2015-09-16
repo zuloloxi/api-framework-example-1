@@ -19,6 +19,7 @@ class BootStrap {
 		*/
 		//apiObjectService.initialize()
 		//def test = apiCacheService.getCacheNames()
+
     }
     def destroy = {
     }
