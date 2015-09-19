@@ -64,7 +64,7 @@ class PostController {
 	}
 	
 	def show(){
-		def post = Post.get(params.id.toLong())
+		def post = Post.get(params.id)
 		if(post){
             return ['post':post]
 		}
@@ -100,7 +100,7 @@ class PostController {
 	}
 	
 	def update(){
-		Post postInstance = Post.get(params.id.toLong())
+		Post postInstance = Post.get(params.id)
 		Person person = springSecurityService.currentUser
 		List roles = springSecurityService.getPrincipal().getAuthorities() as List
 		if(postInstance.author==person.id || roles.contains('ROLE_ADMIN')){
@@ -143,7 +143,7 @@ class PostController {
 	}
 	
 	def delete(){
-		Post postInstance = Post.get(params.id.toLong())
+		Post postInstance = Post.get(params.id)
 		if (postInstance == null) {
 			//render(status:HttpServletResponse.SC_NOT_FOUND)
 		}
