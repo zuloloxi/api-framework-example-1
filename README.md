@@ -1,4 +1,5 @@
 # api-framework-example
+(NOTE: THIS IS MERELY AN EXAMPLE THAT RUNS THE PARENT PROJECT)
 
 My apologies but the parent project is now private; after much debate and after TWO SpringOne talks now with MASSIVE anger, confusion from my 'peers', I'm not sharing my code anymore.
 
