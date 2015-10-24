@@ -23,7 +23,7 @@ class SectionController {
 	}
 	
 	def create(){
-        println("create called...")
+        println("section/create called...")
         println(params)
 		Section sectionInstance = new Section()
 		sectionInstance.sectionName = params.sectionName

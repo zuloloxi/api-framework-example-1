@@ -5,7 +5,7 @@ import java.util.Date;
 //@Typed(TypePolicy.MIXED)
 class Post implements Serializable{
 	
-	static hasMany = [topics:PostTopics]
+	static hasMany = [topics:PostTopic]
 	                                      
 	String title
 	String teaser

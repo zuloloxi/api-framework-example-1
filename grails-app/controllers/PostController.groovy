@@ -1,5 +1,5 @@
 
-
+import static grails.async.Promises.*
 //import javax.servlet.http.HttpServletResponse
 
 class PostController {
@@ -66,8 +66,9 @@ class PostController {
 	def show(){
 		def post = Post.get(params.id.toLong())
 		if(post){
-            return ['post':post]
+            		return ['post':post]
 		}
+
 	}
 	
 	def create(){

@@ -2,7 +2,7 @@ import java.io.Serializable;
 
 class Topic implements Serializable{
 	
-	static hasMany = [ posts : PostTopics ] 
+	static hasMany = [ posts : PostTopic ] 
 	                   
 	String topicName
 	
