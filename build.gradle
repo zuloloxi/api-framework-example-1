@@ -72,17 +72,18 @@ dependencies {
     compile "org.springframework.boot:spring-boot-starter-tomcat"
     compile "org.grails:grails-dependencies"
     compile "org.grails:grails-web-boot"
-
+    compile 'org.grails.plugins:spring-security-core:3.0.0.M1'
     runtime 'mysql:mysql-connector-java:5.1.29'
 
+
     compile "org.grails.plugins:hibernate"
-    //compile "org.grails.plugins:cache"
     compile "org.hibernate:hibernate-ehcache"
+    //compile "org.grails.plugins:cache"
+
 
     testCompile "org.grails.plugins:geb"
     testCompile "org.grails:grails-datastore-rest-client:4.0.4.RELEASE"
     testCompile "org.grails:grails-plugin-testing"
-
 
     //console "org.grails:grails-console"
 }

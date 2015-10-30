@@ -100,111 +100,121 @@ hibernate:
     cache:
         use_second_level_cache: true
         use_query_cache: false
-        provider_class: org.hibernate.cache.EhCacheProvider
+        provider_class: 'org.hibernate.cache.EhCacheProvider'
         region:
-            factory_class: org.hibernate.cache.ehcache.EhCacheRegionFactory
+            factory_class: 'org.hibernate.cache.ehcache.EhCacheRegionFactory'
 
-dataSource:
-    pooled: true
-    jmxExport: true
-    driverClassName: com.mysql.jdbc.Driver
-    username: root
-    password: Ch335eB0y
+dataSources:
+    dataSource:
+        pooled: true
+        jmxExport: true
+        driverClassName: com.mysql.jdbc.Driver
+        username: root
+        password: Ch335eB0y
+    user:
+        pooled: true
+        jmxExport: true
+        driverClassName: com.mysql.jdbc.Driver
+        username: root
+        password: Ch335eB0y
 
 environments:
     development:
-        dataSource:
-            dbCreate: update
-            url: jdbc:mysql://localhost:3306/testdb
-            properties:
-                jmxEnabled: true
-                initialSize: 5
-                maxActive: 50
-                minIdle: 5
-                maxIdle: 25
-                maxWait: 10000
-                maxAge: 600000
-                timeBetweenEvictionRunsMillis: 5000
-                minEvictableIdleTimeMillis: 60000
-                validationQuery: SELECT 1
-                validationQueryTimeout: 3
-                validationInterval: 15000
-                testOnBorrow: true
-                testWhileIdle: true
-                testOnReturn: false
-                jdbcInterceptors: ConnectionState
-                defaultTransactionIsolation: 2 # TRANSACTION_READ_COMMITTED
-        dataSource_user:
-            dbCreate: create-drop
-            url: jdbc:mysql://localhost:3306/testuser
-            properties:
-                jmxEnabled: true
-                initialSize: 5
-                maxActive: 50
-                minIdle: 5
-                maxIdle: 25
-                maxWait: 10000
-                maxAge: 600000
-                timeBetweenEvictionRunsMillis: 5000
-                minEvictableIdleTimeMillis: 60000
-                validationQuery: SELECT 1
-                validationQueryTimeout: 3
-                validationInterval: 15000
-                testOnBorrow: true
-                testWhileIdle: true
-                testOnReturn: false
-                jdbcInterceptors: ConnectionState
-                defaultTransactionIsolation: 2 # TRANSACTION_READ_COMMITTED
+        dataSources:
+            dataSource:
+                dbCreate: update
+                url: jdbc:mysql://localhost:3306/testdb
+                properties:
+                    jmxEnabled: true
+                    initialSize: 5
+                    maxActive: 50
+                    minIdle: 5
+                    maxIdle: 25
+                    maxWait: 10000
+                    maxAge: 600000
+                    timeBetweenEvictionRunsMillis: 5000
+                    minEvictableIdleTimeMillis: 60000
+                    validationQuery: SELECT 1
+                    validationQueryTimeout: 3
+                    validationInterval: 15000
+                    testOnBorrow: true
+                    testWhileIdle: true
+                    testOnReturn: false
+                    jdbcInterceptors: ConnectionState
+                    defaultTransactionIsolation: 2 # TRANSACTION_READ_COMMITTED
+            user:
+                dbCreate: update
+                url: jdbc:mysql://localhost:3306/testuser
+                properties:
+                    jmxEnabled: true
+                    initialSize: 5
+                    maxActive: 50
+                    minIdle: 5
+                    maxIdle: 25
+                    maxWait: 10000
+                    maxAge: 600000
+                    timeBetweenEvictionRunsMillis: 5000
+                    minEvictableIdleTimeMillis: 60000
+                    validationQuery: SELECT 1
+                    validationQueryTimeout: 3
+                    validationInterval: 15000
+                    testOnBorrow: true
+                    testWhileIdle: true
+                    testOnReturn: false
+                    jdbcInterceptors: ConnectionState
+                    defaultTransactionIsolation: 2 # TRANSACTION_READ_COMMITTED
     test:
-        dataSource:
-            dbCreate: update
-            url: jdbc:mysql://localhost:3306/testdb
-        dataSource_user:
-            dbCreate: update
-            url: jdbc:mysql://localhost:3306/testuser
+        dataSources:
+            dataSource:
+                dbCreate: update
+                url: jdbc:mysql://localhost:3306/testdb
+            user:
+                dbCreate: update
+                url: jdbc:mysql://localhost:3306/testuser
     production:
-        dataSource:
-            dbCreate: update
-            url: jdbc:mysql://localhost:3306/testdb
-            properties:
-                jmxEnabled: true
-                initialSize: 5
-                maxActive: 50
-                minIdle: 5
-                maxIdle: 25
-                maxWait: 10000
-                maxAge: 600000
-                timeBetweenEvictionRunsMillis: 5000
-                minEvictableIdleTimeMillis: 60000
-                validationQuery: SELECT 1
-                validationQueryTimeout: 3
-                validationInterval: 15000
-                testOnBorrow: true
-                testWhileIdle: true
-                testOnReturn: false
-                jdbcInterceptors: ConnectionState
-                defaultTransactionIsolation: 2 # TRANSACTION_READ_COMMITTED
-        dataSource_user:
-            dbCreate: update
-            url: jdbc:mysql://localhost:3306/testuser
-            properties:
-                jmxEnabled: true
-                initialSize: 5
-                maxActive: 50
-                minIdle: 5
-                maxIdle: 25
-                maxWait: 10000
-                maxAge: 600000
-                timeBetweenEvictionRunsMillis: 5000
-                minEvictableIdleTimeMillis: 60000
-                validationQuery: SELECT 1
-                validationQueryTimeout: 3
-                validationInterval: 15000
-                testOnBorrow: true
-                testWhileIdle: true
-                testOnReturn: false
-                jdbcInterceptors: ConnectionState
-                defaultTransactionIsolation: 2 # TRANSACTION_READ_COMMITTED
+        dataSources:
+            dataSource:
+                dbCreate: update
+                url: jdbc:mysql://localhost:3306/testdb
+                properties:
+                    jmxEnabled: true
+                    initialSize: 5
+                    maxActive: 50
+                    minIdle: 5
+                    maxIdle: 25
+                    maxWait: 10000
+                    maxAge: 600000
+                    timeBetweenEvictionRunsMillis: 5000
+                    minEvictableIdleTimeMillis: 60000
+                    validationQuery: SELECT 1
+                    validationQueryTimeout: 3
+                    validationInterval: 15000
+                    testOnBorrow: true
+                    testWhileIdle: true
+                    testOnReturn: false
+                    jdbcInterceptors: ConnectionState
+                    defaultTransactionIsolation: 2 # TRANSACTION_READ_COMMITTED
+            user:
+                dbCreate: update
+                url: jdbc:mysql://localhost:3306/testuser
+                properties:
+                    jmxEnabled: true
+                    initialSize: 5
+                    maxActive: 50
+                    minIdle: 5
+                    maxIdle: 25
+                    maxWait: 10000
+                    maxAge: 600000
+                    timeBetweenEvictionRunsMillis: 5000
+                    minEvictableIdleTimeMillis: 60000
+                    validationQuery: SELECT 1
+                    validationQueryTimeout: 3
+                    validationInterval: 15000
+                    testOnBorrow: true
+                    testWhileIdle: true
+                    testOnReturn: false
+                    jdbcInterceptors: ConnectionState
+                    defaultTransactionIsolation: 2 # TRANSACTION_READ_COMMITTED
 
 ---
 apitoolkit:
@@ -236,3 +246,8 @@ server:
         compression: off
         compressableMimeTypes: application/json,text/json,application/xml,text/xml,text/plain
 
+---
+root:
+    login: admin
+    password: Al1c3Inj@1L
+    email: orubel@gmail.com
