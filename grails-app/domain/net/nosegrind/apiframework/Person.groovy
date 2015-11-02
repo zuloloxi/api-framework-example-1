@@ -4,6 +4,11 @@ class Person implements Serializable {
 
 	private static final long serialVersionUID = 1
 
+	static transients = ['hasBeforeInsert','hasBeforeValidate','hasBeforeUpdate','springSecurityService']
+
+	transient hasBeforeInsert = false
+	transient hasBeforeValidate = false
+	transient hasBeforeUpdate = false
 	transient springSecurityService
 
 	String username
@@ -39,20 +44,37 @@ class Person implements Serializable {
 	}
 
 	def beforeInsert() {
-		encodePassword()
-	}
-
-	def beforeUpdate() {
-		if (isDirty('password')) {
+		if (!hasBeforeInsert) {
+			hasBeforeInsert = true
 			encodePassword()
 		}
 	}
 
+	def afterInsert() {
+		hasBeforeInsert = false
+	}
+
+	def beforeUpdate() {
+		if (!hasBeforeUpdate) {
+			if (isDirty('password')) {
+				hasBeforeUpdate = true
+				encodePassword()
+			}
+		}
+	}
+
+	def afterUpdate() {
+		hasBeforeUpdate = false
+	}
+
+	protected void encodePassword() {
+		password = springSecurityService.encodePassword(password)
+	}
+	/*
 	protected void encodePassword() {
 		password = springSecurityService?.passwordEncoder ? springSecurityService.encodePassword(password) : password
 	}
-
-	static transients = ['springSecurityService']
+	*/
 
 	static constraints = {
 		username blank: false, unique: true

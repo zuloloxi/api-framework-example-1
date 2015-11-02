@@ -23,6 +23,7 @@ if(Environment.current == Environment.DEVELOPMENT) {
                 pattern = "%level %logger - %msg%n"
             }
         }
+	logger 'grails.artefact.Interceptor', INFO, ['STDOUT'], false
         logger("StackTrace", ERROR, ['FULL_STACKTRACE'], false )
     }
 }

@@ -7,12 +7,13 @@ import net.nosegrind.apiframework.*
 
 class BootStrap {
 
+    def passwordEncoder
 	def grailsApplication
 	//ApiObjectService apiObjectService
 	//ApiCacheService apiCacheService
 	
     def init = { servletContext ->
-    /*
+
         grailsApplication.config.apitoolkit.roles.each(){
             Role role = Role.findByAuthority(it.toString()[0..-2])
             if(!role){
@@ -27,6 +28,10 @@ class BootStrap {
             if(!user?.id){
                 user = new Person(username:"${grailsApplication.config.root.login}",password:"${grailsApplication.config.root.password}",email:"${grailsApplication.config.root.email}")
                 user.save(flush:true,failOnError:true)
+            }else{
+                if(!passwordEncoder.isPasswordValid(user.password, grailsApplication.config.root.password, null)){
+                    log.error "Error: Bootstrapped Root Password was changed in config. Please update"
+                }
             }
 
             if(!user?.authorities?.contains(adminRole)){
@@ -35,7 +40,8 @@ class BootStrap {
 
             status.isCompleted()
         }
-*/
+
+
 		/*
 		def plugins = pluginMngr.getAllPlugins()
 		plugins.each{

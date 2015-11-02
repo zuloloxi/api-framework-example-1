@@ -251,3 +251,31 @@ root:
     login: admin
     password: Al1c3Inj@1L
     email: orubel@gmail.com
+
+---
+grails:
+    plugin:
+        springsecurity:
+            userLookup:
+                userDomainClassName: 'net.nosegrind.apiframework.Person'
+                authorityJoinClassName: 'net.nosegrind.apiframework.PersonRole'
+            authority:
+                className: 'net.nosegrind.apiframework.Role'
+            rememberMe:
+                alwaysRemember: false
+                cookieName: 'apiTest'
+                key: '_grails_'
+            logout:
+                postOnly: false
+            ui:
+                encodePassword: false
+            auth:
+                forceHttps: false
+                loginFormUrl: '/login/auth/'
+                ajaxLoginFormUrl: '/login/authAjax/'
+            failureHandler:
+                defaultFailureUrl: '/'
+                ajaxAuthFailUrl: '/'
+
+
+
