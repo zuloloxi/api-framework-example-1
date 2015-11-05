@@ -23,7 +23,11 @@ if(Environment.current == Environment.DEVELOPMENT) {
                 pattern = "%level %logger - %msg%n"
             }
         }
-	logger 'grails.artefact.Interceptor', INFO, ['STDOUT'], false
         logger("StackTrace", ERROR, ['FULL_STACKTRACE'], false )
+        logger("org.springframework.security",INFO,['FULL_STACKTRACE'],false)
+        logger('grails.plugin.springsecurity', INFO,['FULL_STACKTRACE'],false)
+        logger('org.springframework.security.web.access.intercept', INFO, ['STDOUT'], false)
     }
 }
+
+
