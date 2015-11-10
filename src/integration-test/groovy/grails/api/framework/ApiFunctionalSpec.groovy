@@ -15,6 +15,9 @@ import spock.lang.*
 import geb.spock.*
 import grails.plugins.rest.client.RestBuilder
 import grails.plugins.rest.client.RestResponse
+import net.nosegrind.apiframework.*
+import net.nosegrind.apiframework.comm.ApiRequestService
+import grails.plugin.springsecurity.*
 
 /**
  * See the API for {@link grails.test.mixin.support.GrailsUnitTestMixin} for usage instructions
@@ -24,76 +27,75 @@ import grails.plugins.rest.client.RestResponse
 class ApiFunctionalSpec extends Specification {
 
     def grailsApplication
+    ApiCacheService apiCacheService
 
     String entryPoint = "v${Metadata.current.getApplicationVersion()}"
 
+    def cache
+    String cacheVersion
+    static controller = 'post'
+
+    // todo: delete; do 'create' first
     static Long primerId = 1
 
     static Long id = null
     static Long version = null
-    static int user = 0
 
-    // foreign key holders
-    static LinkedHashMap fkeys = ['sectionId':0,'authorId':0]
+    String login
+    String password
+    int user = 0
+    List userRoles
 
-    def output
-    def errOutput
-    
-    void "test login (POST)"() {
-        // set these variables in your config or external properties file (preferable)
-        String login = HOLDER.config.root.login
-        String password = HOLDER.config.root.password
+    LinkedHashMap output = [:]
+
+    void setup(){
+        this.login = grailsApplication.config.root.login
+        this.password = grailsApplication.config.root.password
+        this.cache = apiCacheService.getApiCache (controller)
+        this.cacheVersion = cache['currentStable']['value']
+    }
+
+    void "Test login (POST)"() {
         Object json
-        LinkedHashMap output = [:]
 
         when:
-            // ### ADD: delete cookie.txt prior to running test
-
             def ant = new AntBuilder()
             ant.exec(outputProperty:"cmdOut",errorProperty:"cmdErr",resultProperty:"cmdExit",failonerror:"false",executable:"curl"){
-                arg(line:"""--verbose --request POST --data "j_username=${login}&j_password=${password}&_spring_security_remember_me=checked" http://localhost:8080/api_v0.1/j_spring_security_check --cookie-jar cookies.txt""")
+                arg(line:"""--verbose --request POST --data "j_username=${this.login}&j_password=${this.password}&_spring_security_remember_me=checked" http://localhost:8080/api_v0.1/j_spring_security_check --cookie-jar cookies.txt""")
             }
             output = parseOutput(ant.project.properties.cmdErr)
-            def personClass = HOLDER.getGrailsApplication().getDomainClass('net.nosegrind.apiframework.Person').clazz
-            def principal = personClass.findByUsername(login)
-            this.user = principal.id
 
+            def personClass = grailsApplication.getDomainClass('net.nosegrind.apiframework.Person').clazz
+            def principal = personClass.findByUsername(this.login)
+            user = principal.id
+            userRoles = principal.authorities*.authority
         then:
             assert output.response.code.code == '302'
             assert output.response.code.message == 'Found'
     }
 
-    def 'Check expected input'(){
+    def 'Test Post/Show (GET)'(){
         Object json
-        LinkedHashMap errOutput = [:]
-        def output = ['id', 'sectionId', 'statId', 'title','version']
+        String action = 'show'
+
+        def personClass = grailsApplication.getDomainClass('net.nosegrind.apiframework.Person').clazz
+        def principal = personClass.findByUsername(this.login)
+
+        this.userRoles = principal.authorities*.authority
+        List returns = getApiParams(this.userRoles,(LinkedHashMap)cache[this.cacheVersion][action]['returns'])
 
         when:
             def ant = new AntBuilder()
             ant.exec(outputProperty:"cmdOut",errorProperty:"cmdErr",resultProperty:"cmdExit",failonerror:"false",executable:"curl"){
                 arg(line:"""--verbose --request GET --header "Content-Type: application/json" "http://localhost:8080/${entryPoint}/post/show/${this.primerId}" --cookie cookies.txt""")
             }
-            errOutput = parseOutput(ant.project.properties.cmdErr)
+            output = parseOutput(ant.project.properties.cmdErr)
             json = new JsonSlurper().parseText(ant.project.properties.cmdOut)
-            this.fkeys.sectionId = (json.sectionId)?json.sectionId.toLong():null
-            this.fkeys.statId = (json.statId)?json.statId.toLong():null
         then:
-            assert errOutput.response.code.code == '200'
-            assert json.collect(){it.key} == output
+            assert output.response.code.code == '200'
+            assert json.collect(){it.key}.intersect(returns).size() == returns.size()
     }
 /*
-    void "test show call (GET)"() {
-        given:
-            RestBuilder rest = new RestBuilder()
-        when:
-            RestResponse response = rest.get("http://localhost:8080/${entryPoint}/post/show/1") {
-                accept("application/json")
-                contentType("application/json")
-            }
-        then:
-            response.status == 200
-            response.json.title == "test post"
-    }
 
     void "test create call (PUT)"() {
         given:
@@ -179,8 +181,29 @@ class ApiFunctionalSpec extends Specification {
                 }
             }
         }
-        println('request : '+req)
-        println('response : '+resp)
+        // println('request : '+req)
+        // println('response : '+resp)
         return ['request':req,'response':resp]
+    }
+
+    List getApiParams(List userRoles, LinkedHashMap definitions){
+        //println("#### [ApiLayer : getApiParams ] ####")
+        //try{
+        List apiList = []
+
+        definitions.each() { it2 ->
+            if (userRoles.contains(it2.key) || it2.key == 'permitAll') {
+                //withPool {
+                it2.value.each() { it4 ->
+                    apiList.add(it4.name)
+                }
+                //}
+            }
+        }
+
+        return apiList
+        //}catch(Exception e){
+        //	throw new Exception("[ApiLayer :: getApiParams] : Exception - full stack trace follows:",e)
+        //}
     }
 }
