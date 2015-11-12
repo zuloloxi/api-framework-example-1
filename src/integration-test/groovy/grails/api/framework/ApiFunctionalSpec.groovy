@@ -109,17 +109,15 @@ class ApiFunctionalSpec extends Specification {
         when:
             def ant = new AntBuilder()
             ant.exec(outputProperty:"cmdOut",errorProperty:"cmdErr",resultProperty:"cmdExit",failonerror:"false",executable:"curl"){
-                arg(line:"""--verbose --request POST --header "Content-Type: application/json" -d"{'title': 'test post','teaser': 'This is just a test post to see if this works. Testing the api post system.','content':'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In vel consequat nisl, quis commodo neque. Integer ultrices vitae nulla lacinia rutrum. Duis ut porta arcu, sed gravida tortor. Donec pulvinar elit turpis, ultricies tristique mi auctor ac. Ut elementum ullamcorper risus ac sollicitudin. Morbi semper ultrices enim vel euismod. Proin eleifend orci ac elit mollis tempor. Nulla egestas odio eu volutpat eleifend. Nunc nec massa eget nisl sodales posuere. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nunc accumsan pretium sapien a tincidunt. Sed at fringilla mi.','section':2}" "http://localhost:8080/${entryPoint}/post/create" --cookie cookies.txt""")
+                arg(line:"""--verbose --request POST --header "Content-Type: application/json" -d"{'title': 'test post','teaser': 'This is just a test post to see if this works. Testing the api post system.','content':'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In vel consequat nisl, quis commodo neque. Integer ultrices vitae nulla lacinia rutrum. Duis ut porta arcu, sed gravida tortor. Donec pulvinar elit turpis, ultricies tristique mi auctor ac. Ut elementum ullamcorper risus ac sollicitudin. Morbi semper ultrices enim vel euismod. Proin eleifend orci ac elit mollis tempor. Nulla egestas odio eu volutpat eleifend. Nunc nec massa eget nisl sodales posuere. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nunc accumsan pretium sapien a tincidunt. Sed at fringilla mi.','sectionId':6}" "http://localhost:8080/${entryPoint}/post/create" --cookie cookies.txt""")
             }
             output = parseOutput(ant.project.properties.cmdErr)
-        println("#####ERR:"+ant.project.properties.cmdErr)
-        println("#####OUT:"+ant.project.properties.cmdOut)
-            //json = new JsonSlurper().parseText(ant.project.properties.cmdOut)
-            //println(json)
+            json = new JsonSlurper().parseText(ant.project.properties.cmdOut)
+
         then:
             true
-            //assert output.response.code.code == '200'
-            //assert json.collect(){it.key}.intersect(returns).size() == returns.size()
+            assert output.response.code.code == '200'
+            assert json.collect(){it.key}.intersect(returns).size() == returns.size()
     }
 
 /*
