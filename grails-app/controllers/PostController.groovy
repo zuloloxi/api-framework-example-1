@@ -6,7 +6,7 @@ import static grails.async.Promises.*
 class PostController {
                              
 	static defaultAction = 'list'
-	
+	def springSecurityService
 	
 	def list(){
 		params.max = (params.max) ? params.max?.toInteger() : 10
@@ -69,7 +69,6 @@ class PostController {
 		if(post){
             		return ['post':post]
 		}
-
 	}
 	
 	def create(){
@@ -79,7 +78,7 @@ class PostController {
 		post.title = params.title
 		post.teaser = params.teaser
 		post.content = params.content
-		post.section = Section.get(params.section.toLong())
+		post.section = Section.get(params.sectionId.toLong())
 		post.stat = Status.get(5)
 		
 		Date now = new Date();
@@ -88,13 +87,11 @@ class PostController {
 		post.endCommentsDate = (params.endCommentsDate) ? params.endCommentsDate : null
 		
 		post.author = person.id
-
-		if (post.hasErrors()) {
-			//render(status:HttpServletResponse.SC_NOT_FOUND, text: 'Could not save Post. Check your data and try again')
-		}
 		
 		if (!post.save(flush:true)) {
-			//render(status:HttpServletResponse.SC_NOT_FOUND, text: 'Could not save Post. Check your data and try again')
+			//post.errors.allErrors.each { println it }
+			response.status = 400
+			response.setHeader('ERROR','Bad Data; Could not be committed. Check your data and try again')
 		}else{
             def newPost = Post.get(post.id.toLong())
 			return ['post':newPost]
@@ -122,7 +119,7 @@ class PostController {
 			}
 	
 			if (postInstance.hasErrors()) {
-				postInstance.errors.allErrors.each { println it }
+				//postInstance.errors.allErrors.each { println it }
 				//render(status:HttpServletResponse.SC_NOT_FOUND)
 			}
 	
