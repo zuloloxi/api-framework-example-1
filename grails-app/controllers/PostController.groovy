@@ -99,6 +99,7 @@ class PostController {
 	}
 	
 	def update(){
+		println("update called")
 		Post postInstance = Post.get(params.id.toLong())
 		Person person = springSecurityService.currentUser
 		List roles = springSecurityService.getPrincipal().getAuthorities() as List
@@ -130,14 +131,16 @@ class PostController {
 			}
 			
 			if(!postInstance.save(flush:true)){
-				respond null
+				response.status = 400
+				response.setHeader('ERROR','Bad Data; Could not be committed. Check your data and try again')
 			}else{
 				//apiToolkitService.callHook('test',testInstance,'update')
 				def newPost = Post.get(postInstance.id.toLong())
                 return ['post':newPost]
 			}
 		}else{
-			//return ['status':HttpServletResponse.SC_NOT_FOUND]
+			response.status = 401
+			response.setHeader('ERROR','Unauthorized: User does not have correct permissions to modify unassociated data.')
 		}
 	}
 	

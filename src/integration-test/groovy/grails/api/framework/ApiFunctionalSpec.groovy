@@ -18,6 +18,8 @@ import grails.plugins.rest.client.RestResponse
 import net.nosegrind.apiframework.*
 import net.nosegrind.apiframework.comm.ApiRequestService
 import grails.plugin.springsecurity.*
+import javax.sql.DataSource
+import groovy.sql.Sql
 
 /**
  * See the API for {@link grails.test.mixin.support.GrailsUnitTestMixin} for usage instructions
@@ -28,6 +30,7 @@ class ApiFunctionalSpec extends Specification {
 
     def grailsApplication
     ApiCacheService apiCacheService
+    def dataSource
 
     String entryPoint = "v${Metadata.current.getApplicationVersion()}"
 
@@ -35,16 +38,13 @@ class ApiFunctionalSpec extends Specification {
     String cacheVersion
     static controller = 'post'
 
-    // todo: delete; do 'create' first
-    static Long primerId = 1
-
-    static Long id = null
-    static Long version = null
-
     String login
     String password
-    int user = 0
-    List userRoles
+
+
+    Long id = null
+    Long version = null
+
 
     LinkedHashMap output = [:]
 
@@ -56,8 +56,6 @@ class ApiFunctionalSpec extends Specification {
     }
 
     void "Test login (POST)"() {
-        Object json
-
         when:
             def ant = new AntBuilder()
             ant.exec(outputProperty:"cmdOut",errorProperty:"cmdErr",resultProperty:"cmdExit",failonerror:"false",executable:"curl"){
@@ -67,27 +65,27 @@ class ApiFunctionalSpec extends Specification {
 
             def personClass = grailsApplication.getDomainClass('net.nosegrind.apiframework.Person').clazz
             def principal = personClass.findByUsername(this.login)
-            user = principal.id
-            userRoles = principal.authorities*.authority
+            //user = principal.id
+            //userRoles = principal.authorities*.authority
         then:
             assert output.response.code.code == '302'
             assert output.response.code.message == 'Found'
     }
 
-    def 'Test Post/Show (GET)'(){
-        Object json
-        String action = 'show'
-
-        def personClass = grailsApplication.getDomainClass('net.nosegrind.apiframework.Person').clazz
-        def principal = personClass.findByUsername(this.login)
-
-        this.userRoles = principal.authorities*.authority
-        List returns = getApiParams(this.userRoles,(LinkedHashMap)cache[this.cacheVersion][action]['returns'])
-
+    def "test create (POST)"() {
         when:
+            Object json
+            String action = 'create'
+
+            def personClass = grailsApplication.getDomainClass('net.nosegrind.apiframework.Person').clazz
+            def principal = personClass.findByUsername(this.login)
+
+            def userRoles = principal.authorities*.authority
+            List returns = getApiParams(userRoles,(LinkedHashMap)cache[this.cacheVersion][action]['returns'])
+
             def ant = new AntBuilder()
             ant.exec(outputProperty:"cmdOut",errorProperty:"cmdErr",resultProperty:"cmdExit",failonerror:"false",executable:"curl"){
-                arg(line:"""--verbose --request GET --header "Content-Type: application/json" "http://localhost:8080/${entryPoint}/post/${action}/${this.primerId}" --cookie cookies.txt""")
+                arg(line:"""--verbose --request POST --header "Content-Type: application/json" -d "{'title': 'test post','teaser': 'This is just a test post to see if this works. Testing the api post system.','content':'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In vel consequat nisl, quis commodo neque. Integer ultrices vitae nulla lacinia rutrum. Duis ut porta arcu, sed gravida tortor. Donec pulvinar elit turpis, ultricies tristique mi auctor ac. Ut elementum ullamcorper risus ac sollicitudin. Morbi semper ultrices enim vel euismod. Proin eleifend orci ac elit mollis tempor. Nulla egestas odio eu volutpat eleifend. Nunc nec massa eget nisl sodales posuere. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nunc accumsan pretium sapien a tincidunt. Sed at fringilla mi.','sectionId':6}" "http://localhost:8080/${entryPoint}/post/create" --cookie cookies.txt""")
             }
             output = parseOutput(ant.project.properties.cmdErr)
             json = new JsonSlurper().parseText(ant.project.properties.cmdOut)
@@ -96,48 +94,63 @@ class ApiFunctionalSpec extends Specification {
             assert json.collect(){it.key}.intersect(returns).size() == returns.size()
     }
 
-    def "test create call (POST)"() {
-        Object json
-        String action = 'create'
-
-        def personClass = grailsApplication.getDomainClass('net.nosegrind.apiframework.Person').clazz
-        def principal = personClass.findByUsername(this.login)
-
-        this.userRoles = principal.authorities*.authority
-        List returns = getApiParams(this.userRoles,(LinkedHashMap)cache[this.cacheVersion][action]['returns'])
-
+    def 'Test show (GET)'() {
         when:
+            Object json
+            String action = 'show'
+            Long primerId = 0
+            def sql = new Sql(dataSource)
+            sql.eachRow("select id from post order by id desc limit 1") {
+                primerId = it.id
+            }
+
+            def personClass = grailsApplication.getDomainClass('net.nosegrind.apiframework.Person').clazz
+            def principal = personClass.findByUsername(this.login)
+
+            def userRoles = principal.authorities*.authority
+            List returns = getApiParams(userRoles,(LinkedHashMap)cache[this.cacheVersion][action]['returns'])
+
             def ant = new AntBuilder()
             ant.exec(outputProperty:"cmdOut",errorProperty:"cmdErr",resultProperty:"cmdExit",failonerror:"false",executable:"curl"){
-                arg(line:"""--verbose --request POST --header "Content-Type: application/json" -d"{'title': 'test post','teaser': 'This is just a test post to see if this works. Testing the api post system.','content':'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In vel consequat nisl, quis commodo neque. Integer ultrices vitae nulla lacinia rutrum. Duis ut porta arcu, sed gravida tortor. Donec pulvinar elit turpis, ultricies tristique mi auctor ac. Ut elementum ullamcorper risus ac sollicitudin. Morbi semper ultrices enim vel euismod. Proin eleifend orci ac elit mollis tempor. Nulla egestas odio eu volutpat eleifend. Nunc nec massa eget nisl sodales posuere. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nunc accumsan pretium sapien a tincidunt. Sed at fringilla mi.','sectionId':6}" "http://localhost:8080/${entryPoint}/post/create" --cookie cookies.txt""")
+                arg(line:"""--verbose --request GET --header "Content-Type: application/json" "http://localhost:8080/${entryPoint}/post/${action}/${primerId}" --cookie cookies.txt""")
             }
             output = parseOutput(ant.project.properties.cmdErr)
             json = new JsonSlurper().parseText(ant.project.properties.cmdOut)
-
         then:
-            true
             assert output.response.code.code == '200'
             assert json.collect(){it.key}.intersect(returns).size() == returns.size()
     }
 
-/*
-    void "test update call (POST)"() {
-        given:
-        RestBuilder rest = new RestBuilder()
-
+    void "test update call (PUT)"() {
         when:
-        RestResponse response = rest.post("http://localhost:8080/${grailsApplication.metadata.'app.name'}/books") {
-            json([
-                    title: "title2"
-            ])
-        }
+            Object json
+            String action = 'update'
+            Long primerId = 0
+            def sql = new Sql(dataSource)
+            sql.eachRow("select id from post order by id desc limit 1") {
+                primerId = it.id
+            }
 
+            def personClass = grailsApplication.getDomainClass('net.nosegrind.apiframework.Person').clazz
+            def principal = personClass.findByUsername(this.login)
+
+            def userRoles = principal.authorities*.authority
+            List returns = getApiParams(userRoles,(LinkedHashMap)cache[this.cacheVersion][action]['returns'])
+
+            def ant = new AntBuilder()
+            ant.exec(outputProperty:"cmdOut",errorProperty:"cmdErr",resultProperty:"cmdExit",failonerror:"false",executable:"curl"){
+                arg(line:"""--verbose --request GET --header "Content-Type: application/json" -d "{'title': 'updatamundo'}" "http://localhost:8080/${entryPoint}/post/${action}/${primerId}" --cookie cookies.txt""")
+            }
+            output = parseOutput(ant.project.properties.cmdErr)
+        println("######################### error : "+ant.project.properties.cmdErr)
+        println("#####################################"+ant.project.properties.cmdOut)
+            json = new JsonSlurper().parseText(ant.project.properties.cmdOut)
         then:
-        response.status == 200
-        response.json.title == "title2"
-        Book.count == 2
+            assert output.response.code.code == '200'
+            assert json.collect(){it.key}.intersect(returns).size() == returns.size()
     }
 
+    /*
     void "test delete call (DELETE)"() {
         given:
         RestBuilder rest = new RestBuilder()
