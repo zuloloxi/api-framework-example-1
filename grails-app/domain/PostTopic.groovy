@@ -1,8 +1,12 @@
+import org.bson.types.ObjectId
+
 //@Typed(TypePolicy.MIXED)
 class PostTopic implements Serializable{
-	
-	static belongsTo = [Post,Topic] 
-	
+
+	static mapWith = "mongo"
+	static belongsTo = [Post,Topic]
+
+	ObjectId id
 	Post post
 	Topic topic
 	

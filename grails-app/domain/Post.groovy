@@ -1,12 +1,15 @@
 import java.io.Serializable;
 import java.util.Date;
+import org.bson.types.ObjectId
 //import groovy.sql.Sql
 
 //@Typed(TypePolicy.MIXED)
 class Post implements Serializable{
-	
+
+	static mapWith = "mongo"
 	static hasMany = [topics:PostTopic]
-	                                      
+
+	ObjectId id
 	String title
 	String teaser
 	String content

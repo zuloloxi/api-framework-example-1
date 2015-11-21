@@ -65,12 +65,12 @@ class PostController {
 	}
 	
 	def show(){
-		def post = Post.get(params.id.toLong())
+		def post = Post.get(params.id)
 		if(post){
-            		return ['post':post]
+			return ['post':post]
 		}
 	}
-	
+
 	def create(){
 		Person person = springSecurityService.currentUser
 		Post post = new Post();

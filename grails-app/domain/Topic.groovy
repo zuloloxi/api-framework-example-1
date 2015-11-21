@@ -1,9 +1,12 @@
 import java.io.Serializable;
+import org.bson.types.ObjectId
 
 class Topic implements Serializable{
-	
-	static hasMany = [ posts : PostTopic ] 
-	                   
+
+	static mapWith = "mongo"
+	static hasMany = [ posts : PostTopic ]
+
+	ObjectId id
 	String topicName
 	
     static constraints = {

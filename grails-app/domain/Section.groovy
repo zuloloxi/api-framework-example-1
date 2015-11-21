@@ -1,10 +1,13 @@
 import java.io.Serializable;
+import org.bson.types.ObjectId
 
 //@Typed(TypePolicy.MIXED)
 class Section implements Serializable{
-	
-	static hasMany = [ posts : Post ] 
 
+	static mapWith = "mongo"
+	static hasMany = [ posts : Post ]
+
+	ObjectId id
 	String sectionName
 	Boolean commentsAllowed = true
 	

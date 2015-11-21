@@ -52,7 +52,7 @@ class PersonRole implements Serializable {
 	}
 
 	static PersonRole create(Person person, Role role, boolean flush = false) {
-		def instance = new PersonRole(person, role, null)
+		def instance = new PersonRole(person, role)
 		instance.save(flush: flush, insert: true)
 		instance
 	}
