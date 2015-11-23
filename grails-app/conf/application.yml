@@ -229,27 +229,6 @@ environments:
                     defaultTransactionIsolation: 2 # TRANSACTION_READ_COMMITTED
 
 ---
-apitoolkit:
-    apiName: api
-    attempts: 5
-    roles: {ROLE_USER,ROLE_ROOT,ROLE_ADMIN,ROLE_ARCH}
-    apichain:
-        limit:3
-    rest:
-        postcrement: false
-    chaining:
-        enabled: true
-    batching:
-        enabled: true
-    user:
-        roles: {ROLE_USER}
-    admin:
-        roles: {ROLE_ROOT,ROLE_ADMIN,ROLE_ARCH}
-    serverType: master
-    iostate:
-        preloadDir: /home/owenrubel/.iostate
-
----
 server:
     tomcat:
         backgroundProcessorDelay: 30
