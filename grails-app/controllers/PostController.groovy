@@ -1,7 +1,7 @@
 import net.nosegrind.apiframework.Person
 
 import static grails.async.Promises.*
-//import javax.servlet.http.HttpServletResponse
+import javax.servlet.http.HttpServletResponse
 
 class PostController {
                              
@@ -68,6 +68,8 @@ class PostController {
 		def post = Post.get(params.id)
 		if(post){
 			return ['post':post]
+		}else{
+			render(status:HttpServletResponse.SC_BAD_REQUEST, text: 'Bad ID. ID does not correspond with record.')
 		}
 	}
 
